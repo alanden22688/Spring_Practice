@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--bean定義檔-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+	<bean id="helloBean" class="myBean.HelloBean">
+		<property name="name">
+			<value>alan鄧皓仁</value>
+		</property>
+	</bean>
+	
+	<bean id="helloBean2" class="myBean.HelloBeanAOPDemo">
+		<property name="name">
+			<value>alan鄧皓仁</value>
+		</property>
+	</bean>
+	
+<!-- 	<bean id="myAspect1" class="myAspect.MyAspect1"/> -->
+	<bean id="myAspect2" class="myAspect.MyAspect2"/>
+	
+	<bean id="dateBean" class="java.util.Date"></bean>
+	
+<!-- 將Aspect寫在bean定義檔中 -->
+	<aop:config>
+		<aop:aspect id="hello" ref="myAspect2">
+			<aop:pointcut expression="execution(String myBean.IHello.getName())" id="getName"/>
+			<aop:before method="beforeLogAdvice" pointcut-ref="getName"/>
+			<aop:after-returning method="afterReturningLogAdvice" pointcut-ref="getName" returning="returnValue"/>
+<!-- 			<aop:around method="around" pointcut-ref="getName"/> -->
+			<aop:after-throwing pointcut-ref="getName" throwing="throwable" method="afterThrowingLogAdvice"/>
+		</aop:aspect>
+	</aop:config>
+	
+<!-- ======================================== -->
+<!-- 	使用annotation寫在java檔中 -->
+<!-- 	<aop:aspectj-autoproxy/> -->
+</beans>
